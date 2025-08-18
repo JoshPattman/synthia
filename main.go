@@ -168,7 +168,6 @@ func run() {
 		if err != nil && !errors.Is(err, io.EOF) {
 			panic(err)
 		}
-		// tune, err := ParseSimpleNotation(string(data))
 		tune, err := ParseAdvancedNotation(string(data), *bpm)
 		if err != nil {
 			panic(err)
@@ -192,24 +191,6 @@ func run() {
 			}
 		}
 	}
-}
-
-type Config struct {
-	EpicTune string `json:"epic_tune"`
-}
-
-func LoadConfig() Config {
-	f, err := os.Open("config.json")
-	if err != nil {
-		panic(err)
-	}
-	defer f.Close()
-	conf := Config{}
-	err = json.NewDecoder(f).Decode(&conf)
-	if err != nil {
-		panic(err)
-	}
-	return conf
 }
 
 func loadInstruments(instrumentConfig string) (map[string]instruments.Instrument, error) {
