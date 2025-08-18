@@ -1,0 +1,35 @@
+<WarmUpChords>
+    t-piano;
+    p-c-3-3;p-c-4-2;p-e-4-2;a-2;
+    p-e-3-3;p-b-3-2;p-e-4-2;a-2;
+    p-f-3-6;p-c-4-4;p-e-4-4;a-4;
+</>
+
+[]
+<SadCat>
+    t-cat;
+    p-b-4-0.5;a-0.5;
+    p-c-5-1;a-1;
+    p-e-4-0.5;a-0.5;
+    p-g-4-2;a-2;
+
+    p-b-4-0.5;a-0.5;
+    p-c-5-1;a-1;
+    p-e-4-0.5;a-0.5;
+    p-g-4-2;a-1;
+    p-f-4-3;a-3;
+</>
+
+<Main>
+    i-WarmUpChords;
+    a-8;
+    i-WarmUpChords;
+    a-6;
+    i-SadCat;
+    a-2;
+    i-WarmUpChords;
+    a-6;
+    i-SadCat;
+    a-2;
+    i-WarmUpChords;
+</>

@@ -1,0 +1,34 @@
+# Synthia - The best synth in the world
+- Toy project to play with sound waves.
+- Uses composition to build up effects from generated or recorded sound, playing them as notes.
+- Supports interactive mode and playback mode.
+## Usage
+- `$ go run . -mode interactive`
+    - This will use the `instruments.json` file and load a piano in interactive mode.
+    - The numbers and qwerty rows will play notes (including the # notes).
+    - Z and X will shift the octave up/down.
+    - Shift will reset recording / print the reconding to stdout.
+    - Ctrl will reset recording / print the normalised (to closest .25 notes) to stdout.
+- `$ cat ./songs/sad_cats.txt | go run . -mode play`
+    - This will also use `instruments.json` and also the specified song and will play it (on loop).
+    - See below documentation for the file format of songs.
+## Music File Format
+- I have built a simple file format for writing music.
+- It works by defining larger and larger building blocks until you have a song.
+- See the `./songs` directory for examples.
+- Each file is made up of multiple named subsections: `<MyCoolSubSection>...</>`.
+- Each subsection contains multiple instructions separated by semicolos, for example `p-e-4-0.5;a-0.5;i-MySubSection;t-instrument_name;`.
+    - Play a note: `p-(notename)-(octave)-(duration);`.
+    - Advanced in timeline: `a-(duration);`.
+    - Insert a subsection: `i-(subsectionname);`.
+    - Set the instrument (tied to instruments.json): `t-(instrumentname);`.
+- The file format is completely whitespace insensitive.
+- You can make comments by surrounding them in square brackets.
+- How does the timeline work?:
+    - Each subsection has a head. The head is the current time at which we are inserting notes.
+    - Playing a note DOES NOT move the head. To play two notes at once, simply play them without an advance command in the middle.
+    - The only way to move the head is to use an advanced command.
+    - Moving a head from a subsection does not move the head of the subsection that called it. i.e. If you call two subsections without a delay between them, they run in parallell.
+- How does setting instruments work?
+    - When you set an instrument, it is set until you change it.
+    - This includes setting it for subsections that this subsection calls.

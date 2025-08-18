@@ -1,0 +1,66 @@
+{
+    "buzzer": {
+        "source": {
+            "type": "generate",
+            "wave_type": "sawtooth",
+            "wave_run_in_time": 0.1,
+            "wave_run_out_time": 10,
+            "wave_run_out_expo": 2
+        },
+        "volume": 0.15,
+        "note_off_time": 0.25,
+        "note_off_expo": 2
+    },
+    "buzzer_osc": {
+        "source": {
+            "type": "generate",
+            "wave_type": "sawtooth",
+            "wave_run_in_time": 0.1,
+            "wave_run_out_time": 10,
+            "wave_run_out_expo": 2
+        },
+        "volume_oscilator": {
+            "frequency": 4,
+            "wave_type": "square"
+        },
+        "volume": 0.15,
+        "note_off_time": 0.25,
+        "note_off_expo": 2
+    },
+    "cat": {
+        "source": {
+            "type": "wav",
+            "wav_path": "./source_wavs/cat.wav",
+            "wav_note": "C",
+            "wav_octave": 4,
+            "wav_offset": 0.15
+        },
+        "volume": 1.2,
+        "note_off_time": 0.25,
+        "note_off_expo": 2
+    },
+    "dog": {
+        "source": {
+            "type": "wav",
+            "wav_path": "./source_wavs/dog.wav",
+            "wav_note": "C",
+            "wav_octave": 4,
+            "wav_offset": 0.0
+        },
+        "volume": 1.2,
+        "note_off_time": 0.25,
+        "note_off_expo": 2
+    },
+    "piano": {
+        "source": {
+            "type": "wav",
+            "wav_path": "./source_wavs/piano.wav",
+            "wav_note": "C",
+            "wav_octave": 3,
+            "wav_offset": 0.0
+        },
+        "volume": 1.2,
+        "note_off_time": 0.25,
+        "note_off_expo": 2
+    }
+}
