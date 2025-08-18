@@ -157,8 +157,8 @@ func run() {
 			if time.Since(timeOfLastClick).Seconds() > 1/(*bpm/60.0) {
 				timeOfLastClick = time.Now()
 				globalWaveform.Add(wave.NewRollOffWaveform(
-					wave.NewSquareWaveform(50, 0.25, 0),
-					0.06,
+					wave.NewSquareWaveform(50, 0.15, 0),
+					0.01,
 					1,
 				))
 			}

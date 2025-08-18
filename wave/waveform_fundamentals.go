@@ -1,6 +1,9 @@
 package wave
 
-import "math"
+import (
+	"math"
+	"math/rand"
+)
 
 func NewSinWaveform(freq, vol float64) Waveform {
 	return &sinWaveform{f: freq, v: vol}
@@ -16,6 +19,9 @@ func NewTriangleWaveform(freq, vol float64) Waveform {
 }
 func NewSawtoothWaveform(freq, vol float64) Waveform {
 	return &sawWaveform{f: freq, v: vol}
+}
+func NewWhiteNoiseWaveform(vol float64) Waveform {
+	return &whiteNoiseWaveform{volume: vol}
 }
 
 // ----------------- Sine -----------------
@@ -110,4 +116,19 @@ func (s *sawWaveform) Next(deltaTime float64) (float64, bool) {
 	frac := phase - math.Floor(phase) // 0..1
 	val := 2*frac - 1                 // -1..1
 	return val * s.v, false
+}
+
+type whiteNoiseWaveform struct {
+	volume float64
+}
+
+func (wf *whiteNoiseWaveform) Next(deltaTime float64) (float64, bool) {
+	if wf.volume == 0 {
+		return 0, true
+	}
+	return wf.volume * (rand.Float64()*2 - 1), false
+}
+
+func (wf *whiteNoiseWaveform) OffNow() {
+	wf.volume = 0
 }

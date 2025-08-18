@@ -28,6 +28,8 @@ func (ins *waveformInstrument) CreateWaveform(key wave.Key, octave int, duration
 		wf = wave.NewTriangleWaveform(freq, ins.Volume)
 	case SawtoothWaveType:
 		wf = wave.NewSawtoothWaveform(freq, ins.Volume)
+	case WhiteNoiseWaveType:
+		wf = wave.NewWhiteNoiseWaveform(ins.Volume)
 	default:
 		panic("invalid wave type")
 	}
@@ -87,7 +89,7 @@ func (v *volumeOscilatedInstrument) CreateWaveform(key wave.Key, octave int, dur
 	case TriangleWaveType:
 		volWf = wave.NewTriangleWaveform(v.Frequency, 1)
 	default:
-		panic("oof")
+		panic("unsupported wave type")
 	}
 	wf = wave.NewVolumeOscilatorWaveform(wf, volWf)
 	return wf
@@ -101,14 +103,16 @@ const (
 	SquareWaveType
 	TriangleWaveType
 	SawtoothWaveType
+	WhiteNoiseWaveType
 )
 
 var synthWaveFromString = map[string]SynthWaveType{
-	"sin":      SinWaveType,
-	"square":   SquareWaveType,
-	"triangle": TriangleWaveType,
-	"sawtooth": SawtoothWaveType,
-	"":         NotSpecifiedWaveType,
+	"sin":         SinWaveType,
+	"square":      SquareWaveType,
+	"triangle":    TriangleWaveType,
+	"sawtooth":    SawtoothWaveType,
+	"white_noise": WhiteNoiseWaveType,
+	"":            NotSpecifiedWaveType,
 }
 
 func (w *SynthWaveType) UnmarshalJSON(data []byte) error {
