@@ -118,12 +118,12 @@ func run() {
 				for _, a := range actions {
 					switch a := a.(type) {
 					case Play:
-						fmt.Printf("p-%v-%v-%v;", a.Key, a.Octave, a.Duration)
+						fmt.Printf("%v%v-%v;", a.Key, a.Octave, a.Duration)
 					case Advance:
 						if a.Duration == 0 {
 							continue
 						}
-						fmt.Printf("a-%v;\n", a.Duration)
+						fmt.Printf("%v+;\n", a.Duration)
 					}
 				}
 				timeline = make([]timelineEntry, 0)

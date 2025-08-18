@@ -121,52 +121,92 @@ func addAdvancedToTimeline(now float64, instrument string, timeline []timelineEn
 		if c == "" {
 			continue
 		}
-		args := strings.Split(c, "-")
-		switch args[0] {
-		case "p":
-			if len(args) != 4 {
-				return nil, errors.New("all play commands must have 4 args")
-			}
-			key, err := wave.ParseStringToKey(args[1])
+
+		if isInstrumentChange, changeTo, err := tryParseInstrumentChange(c); isInstrumentChange {
 			if err != nil {
 				return nil, err
 			}
-			octave, err := strconv.Atoi(args[2])
+			instrument = changeTo
+		} else if isInsertSubsection, subsectionName, err := tryParseInsertSubsection(c); isInsertSubsection {
 			if err != nil {
 				return nil, err
 			}
-			dur, err := strconv.ParseFloat(args[3], 64)
-			if err != nil {
-				return nil, err
-			}
-			timeline = append(timeline, timelineEntry{now, Play{Key: key, Octave: octave, Duration: dur / (bpm / 60.0), Instrument: instrument}})
-		case "a":
-			if len(args) != 2 {
-				return nil, errors.New("all advance commands must have 2 args, got " + c)
-			}
-			t, err := strconv.ParseFloat(args[1], 64)
-			if err != nil {
-				return nil, err
-			}
-			now += t / (bpm / 60.0)
-		case "i":
-			if len(args) != 2 {
-				return nil, errors.New("all insert commands must have 2 args")
-			}
-			name := args[1]
-			tl, err := addAdvancedToTimeline(now, instrument, timeline, name, blocks, bpm)
+			tl, err := addAdvancedToTimeline(now, instrument, timeline, subsectionName, blocks, bpm)
 			if err != nil {
 				return nil, err
 			}
 			timeline = tl
-		case "t":
-			if len(args) != 2 {
-				return nil, errors.New("all insert commands must have 2 args")
+		} else if isAdvance, advancedBy, err := tryParseAdvanceTimeline(c); isAdvance {
+			if err != nil {
+				return nil, err
 			}
-			instrument = args[1]
+			now += advancedBy / (bpm / 60.0)
+		} else if isNote, key, octave, duration, err := tryParsePlayNote(c); isNote {
+			if err != nil {
+				return nil, err
+			}
+			timeline = append(timeline, timelineEntry{now, Play{Key: key, Octave: octave, Duration: duration / (bpm / 60.0), Instrument: instrument}})
+		} else {
+			return nil, fmt.Errorf("cannot parse instruction '%s'", c)
 		}
 	}
 	return timeline, nil
+}
+
+var instrumentChangeMatcher = regexp.MustCompile(`^\$(.+)$`)
+
+func tryParseInstrumentChange(cmd string) (bool, string, error) {
+	match := instrumentChangeMatcher.FindStringSubmatch(cmd)
+	if match == nil {
+		return false, "", nil
+	}
+	return true, match[1], nil
+}
+
+var useSubsectionMatcher = regexp.MustCompile(`^@(.+)$`)
+
+func tryParseInsertSubsection(cmd string) (bool, string, error) {
+	match := useSubsectionMatcher.FindStringSubmatch(cmd)
+	if match == nil {
+		return false, "", nil
+	}
+	return true, match[1], nil
+}
+
+var advanceTimelineMatcher = regexp.MustCompile(`^(.+)\+$`)
+
+func tryParseAdvanceTimeline(cmd string) (bool, float64, error) {
+	match := advanceTimelineMatcher.FindStringSubmatch(cmd)
+	if match == nil {
+		return false, 0, nil
+	}
+	dur, err := strconv.ParseFloat(match[1], 64)
+	if err != nil {
+		return true, 0, err
+	}
+	return true, dur, nil
+}
+
+var playNoteMatcher = regexp.MustCompile(`^([a-zA-Z]#?)(\d+)-(.+)$`)
+
+func tryParsePlayNote(cmd string) (bool, wave.Key, int, float64, error) {
+	match := playNoteMatcher.FindStringSubmatch(cmd)
+	if match == nil {
+		return false, 0, 0, 0, nil
+	}
+	key, err := wave.ParseStringToKey(match[1])
+	if err != nil {
+		return true, 0, 0, 0, err
+	}
+	octave, err := strconv.Atoi(match[2])
+	if err != nil {
+		return true, 0, 0, 0, err
+	}
+	dur, err := strconv.ParseFloat(match[3], 64)
+	if err != nil {
+		return true, 0, 0, 0, err
+	}
+	return true, key, octave, dur, nil
 }
 
 func buildActionsFromTimeline(timeline []timelineEntry) []Action {

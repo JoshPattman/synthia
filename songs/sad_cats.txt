@@ -1,35 +1,32 @@
-<WarmUpChords>
-    t-piano;
-    p-c-2-3;p-c-3-2;p-e-3-2;a-2;
-    p-e-2-3;p-b-2-2;p-e-3-2;a-2;
-    p-f-2-6;p-c-3-4;p-e-3-4;a-4;
+<WarmUpChords> $piano;
+    C2-3;C3-3;E3-3; 2+;
+    E2-3;B3-2;E3-3; 2+;
+    F2-6;C3-6;E3-6; 4+;
 </>
 
-[]
-<SadCat>
-    t-cat;
-    p-b-3-0.5;a-0.5;
-    p-c-4-1;a-1;
-    p-e-3-0.5;a-0.5;
-    p-g-3-2;a-2;
+<SadCat> $cat;
+    B3-0.5; 0.5+;
+    C4-1; 1+;
+    E3-0.5; 0.5+;
+    G3-2; 2+;
 
-    p-b-3-0.5;a-0.5;
-    p-c-4-1;a-1;
-    p-e-3-0.5;a-0.5;
-    p-g-3-2;a-1;
-    p-f-3-3;a-3;
+    B3-0.5; 0.5+;
+    C4-1; 1+;
+    E3-0.5; 0.5+;
+    G3-1; 1+;
+    F3-3; 3+;
 </>
 
 <Main>
-    i-WarmUpChords;
-    a-8;
-    i-WarmUpChords;
-    a-6;
-    i-SadCat;
-    a-2;
-    i-WarmUpChords;
-    a-6;
-    i-SadCat;
-    a-2;
-    i-WarmUpChords;
+    @WarmUpChords;
+    8+;
+    @WarmUpChords;
+    6+;
+    @SadCat;
+    2+;
+    @WarmUpChords;
+    6+;
+    @SadCat;
+    2+;
+    @WarmUpChords;
 </>

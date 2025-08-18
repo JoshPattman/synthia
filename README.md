@@ -17,11 +17,11 @@
 - It works by defining larger and larger building blocks until you have a song.
 - See the `./songs` directory for examples.
 - Each file is made up of multiple named subsections: `<MyCoolSubSection>...</>`.
-- Each subsection contains multiple instructions separated by semicolos, for example `p-e-4-0.5;a-0.5;i-MySubSection;t-instrument_name;`.
-    - Play a note: `p-(notename)-(octave)-(duration);`.
-    - Advanced in timeline: `a-(duration);`.
-    - Insert a subsection: `i-(subsectionname);`.
-    - Set the instrument (tied to instruments.json): `t-(instrumentname);`.
+- Each subsection contains multiple instructions separated by semicolos, for example `$piano; C2-3;C3-3;E3-3; 2+; @MySubSection;`.
+    - Play a note: `(notename)(octave)-(duration);`.
+    - Advanced in timeline: `(duration)+;`.
+    - Insert a subsection: `@(subsectionname);`.
+    - Set the instrument (tied to instruments.json): `$(instrumentname);`.
 - The file format is completely whitespace insensitive.
 - You can make comments by surrounding them in square brackets.
 - How does the timeline work?:
