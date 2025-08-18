@@ -38,7 +38,6 @@ func (ins *waveformInstrument) CreateWaveform(key wave.Key, octave int, duration
 	} else {
 		wf = wave.NewSmoothAutoOffWaveform(wf, ins.NoteOffTime, ins.NoteOffExpo, duration)
 	}
-	wf = wave.NewVolumeOscilatorWaveform(wf, wave.NewZeroSquareWaveform(15, 1, 0))
 	return wf
 }
 

@@ -181,7 +181,7 @@ func run() {
 						panic(fmt.Errorf("could not find instrument '%s'", action.Instrument))
 					}
 					globalWaveform.Add(
-						instrument.CreateWaveform(action.Key, action.Octave-2, action.Duration),
+						instrument.CreateWaveform(action.Key, action.Octave, action.Duration),
 					)
 					fmt.Println("Play", action.Key, action.Octave, action.Duration)
 				case Advance:
