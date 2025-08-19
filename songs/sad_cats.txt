@@ -1,9 +1,13 @@
+<Chord1> C2;C3;E3; </>
+<Chord2> E2;B3;E3; </>
+<Chord3> F2;C3;E3; </>
+
 <WarmUpChords> $piano;
-    3~;
-    C2;C3;E3; 2+;
-    E2;B3;E3; 2+;
+    0.25~;
+    @Chord1; 2+;
+    @Chord2; 2+;
     6~;
-    F2;C3;E3; 4+;
+    @Chord3; 4+;
 </>
 
 <SadCat> $cat;
