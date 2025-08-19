@@ -100,7 +100,7 @@ func ParseAdvancedNotation(code string, bpm float64) ([]Action, error) {
 	for _, b := range blocks {
 		blocksMap[strings.ToLower(b[1])] = b[2]
 	}
-	timeline, err := addAdvancedToTimeline(0, "", make([]timelineEntry, 0), "Main", blocksMap, bpm)
+	timeline, err := addAdvancedToTimeline(0, "", 1, make([]timelineEntry, 0), "Main", blocksMap, bpm)
 	if err != nil {
 		return nil, err
 	}
@@ -109,7 +109,7 @@ func ParseAdvancedNotation(code string, bpm float64) ([]Action, error) {
 }
 
 // Timeline is UNORDERED
-func addAdvancedToTimeline(now float64, instrument string, timeline []timelineEntry, blockName string, blocks map[string]string, bpm float64) ([]timelineEntry, error) {
+func addAdvancedToTimeline(now float64, instrument string, duration float64, timeline []timelineEntry, blockName string, blocks map[string]string, bpm float64) ([]timelineEntry, error) {
 	blockName = strings.ToLower(blockName)
 	code, ok := blocks[blockName]
 	if !ok {
@@ -131,7 +131,7 @@ func addAdvancedToTimeline(now float64, instrument string, timeline []timelineEn
 			if err != nil {
 				return nil, err
 			}
-			tl, err := addAdvancedToTimeline(now, instrument, timeline, subsectionName, blocks, bpm)
+			tl, err := addAdvancedToTimeline(now, instrument, duration, timeline, subsectionName, blocks, bpm)
 			if err != nil {
 				return nil, err
 			}
@@ -141,11 +141,16 @@ func addAdvancedToTimeline(now float64, instrument string, timeline []timelineEn
 				return nil, err
 			}
 			now += advancedBy / (bpm / 60.0)
-		} else if isNote, key, octave, duration, err := tryParsePlayNote(c); isNote {
+		} else if isNote, key, octave, err := tryParsePlayNote(c); isNote {
 			if err != nil {
 				return nil, err
 			}
 			timeline = append(timeline, timelineEntry{now, Play{Key: key, Octave: octave, Duration: duration / (bpm / 60.0), Instrument: instrument}})
+		} else if isDuration, dur, err := tryParseSetDuration(c); isDuration {
+			if err != nil {
+				return nil, err
+			}
+			duration = dur
 		} else {
 			return nil, fmt.Errorf("cannot parse instruction '%s'", c)
 		}
@@ -187,26 +192,36 @@ func tryParseAdvanceTimeline(cmd string) (bool, float64, error) {
 	return true, dur, nil
 }
 
-var playNoteMatcher = regexp.MustCompile(`^([a-zA-Z]#?)(\d+)-(.+)$`)
+var playNoteMatcher = regexp.MustCompile(`^([a-zA-Z]#?)(\d+)$`)
 
-func tryParsePlayNote(cmd string) (bool, wave.Key, int, float64, error) {
+func tryParsePlayNote(cmd string) (bool, wave.Key, int, error) {
 	match := playNoteMatcher.FindStringSubmatch(cmd)
 	if match == nil {
-		return false, 0, 0, 0, nil
+		return false, 0, 0, nil
 	}
 	key, err := wave.ParseStringToKey(match[1])
 	if err != nil {
-		return true, 0, 0, 0, err
+		return true, 0, 0, err
 	}
 	octave, err := strconv.Atoi(match[2])
 	if err != nil {
-		return true, 0, 0, 0, err
+		return true, 0, 0, err
 	}
-	dur, err := strconv.ParseFloat(match[3], 64)
+	return true, key, octave, nil
+}
+
+var setDurationMatcher = regexp.MustCompile(`^(.+)~$`)
+
+func tryParseSetDuration(cmd string) (bool, float64, error) {
+	match := setDurationMatcher.FindStringSubmatch(cmd)
+	if match == nil {
+		return false, 0, nil
+	}
+	dur, err := strconv.ParseFloat(match[1], 64)
 	if err != nil {
-		return true, 0, 0, 0, err
+		return true, 0, err
 	}
-	return true, key, octave, dur, nil
+	return true, dur, nil
 }
 
 func buildActionsFromTimeline(timeline []timelineEntry) []Action {

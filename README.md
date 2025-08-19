@@ -18,7 +18,9 @@
 - See the `./songs` directory for examples.
 - Each file is made up of multiple named subsections: `<MyCoolSubSection>...</>`.
 - Each subsection contains multiple instructions separated by semicolos, for example `$piano; C2-3;C3-3;E3-3; 2+; @MySubSection;`.
-    - Play a note: `(notename)(octave)-(duration);`.
+    - Set 
+    - Play a note: `(notename)(octave);`.
+    - Set note durations: `(duration)~;`.
     - Advanced in timeline: `(duration)+;`.
     - Insert a subsection: `@(subsectionname);`.
     - Set the instrument (tied to instruments.json): `$(instrumentname);`.
@@ -29,6 +31,6 @@
     - Playing a note DOES NOT move the head. To play two notes at once, simply play them without an advance command in the middle.
     - The only way to move the head is to use an advanced command.
     - Moving a head from a subsection does not move the head of the subsection that called it. i.e. If you call two subsections without a delay between them, they run in parallell.
-- How does setting instruments work?
-    - When you set an instrument, it is set until you change it.
-    - This includes setting it for subsections that this subsection calls.
+- How does setting instruments / duration work?
+    - When you set an instrument / duration, it is set until you change it.
+    -   This includes setting it for subsections that this subsection calls.

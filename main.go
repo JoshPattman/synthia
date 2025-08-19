@@ -115,10 +115,15 @@ func run() {
 					}
 				}
 				fmt.Printf("\n\n\n")
+				lastDuration := 1.0
 				for _, a := range actions {
 					switch a := a.(type) {
 					case Play:
-						fmt.Printf("%v%v-%v;", a.Key, a.Octave, a.Duration)
+						if a.Duration != lastDuration {
+							lastDuration = a.Duration
+							fmt.Printf("%v~;\n", a.Duration)
+						}
+						fmt.Printf("%v%v;", a.Key, a.Octave)
 					case Advance:
 						if a.Duration == 0 {
 							continue
